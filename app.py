@@ -60,7 +60,7 @@ pipe_t2i.to('cuda:0', torch.float16)
 ### gradio
 rembg_session = rembg.new_session()
 
-+@spaces.GPU
+@spaces.GPU
 def generate(text, seed):
     def fill_background(image):
         image = np.array(image).astype(np.float32) / 255.0
@@ -91,7 +91,7 @@ def generate(text, seed):
     image = fill_background(image)
     return image
 
-+@spaces.GPU
+@spaces.GPU
 def render(image, mc_resolution=256, formats=["obj"]):
     scene_codes = model(image, device=device)
     mesh = model.extract_mesh(scene_codes, resolution=mc_resolution)[0]
