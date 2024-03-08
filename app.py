@@ -78,7 +78,7 @@ def generate(text, seed):
         return image
 
     setup_seed(int(seed))
-    prompt_prefix = "high quality, best quality, highly detailed, masterpiece; "
+    prompt_prefix = "high quality, highly detailed, (best quality, masterpiece), "
     neg_prompt = "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry"
     text = prompt_prefix + text
     samples = pipe_t2i(
