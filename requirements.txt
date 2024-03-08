@@ -14,4 +14,3 @@ torchvision==0.15.1
 tqdm==4.64.1
 transformers==4.27.0
 trimesh==4.0.5
-git+https://github.com/tatsy/torchmcubes.git
