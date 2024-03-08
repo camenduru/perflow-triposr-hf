@@ -154,7 +154,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
             )
     
     with gr.Row():
-        textbox = gr.Textbox(label="Input Prompt", value="a colorful bird")
+        textbox = gr.Textbox(label="Input Prompt", value="a husky dog")
         seed = gr.Textbox(label="Random Seed", value=42)
 
 
