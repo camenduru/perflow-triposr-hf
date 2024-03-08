@@ -160,7 +160,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
 
     gr.Markdown(
     """
-    Examples:
+    It could a bit slow for the first-time generation due to the warm-up of gradio. After that, it will be fast. Here are some examples provided:
     - a policeman
     - a robot, close-up
     - a red car, side view
