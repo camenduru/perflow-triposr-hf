@@ -139,7 +139,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
 
     ### [PeRFlow](https://github.com/magic-research/piecewise-rectified-flow)-T2I  +  [TripoSR](https://github.com/VAST-AI-Research/TripoSR)
     
-    Two-stage synthesis: 1) generating images by PeRFlow-T2I; 2) rendering 3D assests. Here, we plug PeRFlow-delta-weights into the Disney-Pixar-Cartoon dreambooth of SD-v1.5.
+    Two-stage synthesis: 1) generating images by PeRFlow-T2I; 2) rendering 3D assests. Here, we plug the PeRFlow-delta-weights of SD-v1.5 into the Disney-Pixar-Cartoon dreambooth.
     """
     )
     
