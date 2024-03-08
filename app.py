@@ -1,3 +1,4 @@
+import spaces
 import os, logging, time, argparse, random, tempfile, rembg, shlex, subprocess
 import gradio as gr
 import numpy as np
