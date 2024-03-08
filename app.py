@@ -171,18 +171,5 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--username', type=str, default=None, help='Username for authentication')
-    parser.add_argument('--password', type=str, default=None, help='Password for authentication')
-    parser.add_argument('--port', type=int, default=7860, help='Port to run the server listener on')
-    parser.add_argument("--listen", action='store_true', help="launch gradio with 0.0.0.0 as server name, allowing to respond to network requests")
-    parser.add_argument("--share", action='store_true', help="use share=True for gradio and make the UI accessible through their site")
-    parser.add_argument("--queuesize", type=int, default=1, help="launch gradio queue max_size")
-    args = parser.parse_args()
-    interface.queue(max_size=args.queuesize)
-    interface.launch(
-        auth=(args.username, args.password) if (args.username and args.password) else None,
-        share=args.share,
-        server_name="0.0.0.0" if args.listen else None, 
-        server_port=args.port
-    )
+    interface.queue(max_size=10)
+    interface.launch()
