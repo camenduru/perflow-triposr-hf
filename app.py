@@ -1,9 +1,12 @@
-import os, logging, time, argparse, random, tempfile, rembg
+import os, logging, time, argparse, random, tempfile, rembg, shlex, subprocess
 import gradio as gr
 import numpy as np
 import torch
 from PIL import Image
 from functools import partial
+
+subprocess.run(shlex.split('pip install wheel/torchmcubes-0.1.0-cp310-cp310-linux_x86_64.whl'))
+
 from tsr.system import TSR
 from tsr.utils import remove_background, resize_foreground, to_gradio_3d_orientation
 
