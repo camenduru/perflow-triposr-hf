@@ -14,6 +14,12 @@ from tsr.utils import remove_background, resize_foreground, to_gradio_3d_orienta
 from src.scheduler_perflow import PeRFlowScheduler
 from diffusers import StableDiffusionPipeline, UNet2DConditionModel
 
+def fill_background(img):
+    img = np.array(img).astype(np.float32) / 255.0
+    img = img[:, :, :3] * img[:, :, 3:4] + (1 - img[:, :, 3:4]) * 0.5
+    img = Image.fromarray((img * 255.0).astype(np.uint8))
+    return img
+
 def merge_delta_weights_into_unet(pipe, delta_weights, org_alpha = 1.0):
     unet_weights = pipe.unet.state_dict()
     for key in delta_weights.keys():
@@ -72,7 +78,7 @@ def generate(text, seed):
         return image
 
     setup_seed(int(seed))
-    prompt_prefix = "high quality, best quality, masterpiece; "
+    prompt_prefix = "high quality, best quality, highly detailed, masterpiece; "
     neg_prompt = "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry"
     text = prompt_prefix + text
     samples = pipe_t2i(
@@ -86,18 +92,20 @@ def generate(text, seed):
             guidance_scale      = 7.5,
             output_type         = 'pt',
         ).images
-    samples = torch.nn.functional.interpolate(samples, size=768, mode='bilinear')
     samples = samples.squeeze(0).permute(1, 2, 0).cpu().numpy()*255.
     samples = samples.astype(np.uint8)
     samples = Image.fromarray(samples[:, :, :3])
+    return samples
 
-    image = remove_background(samples, rembg_session)
-    image = resize_foreground(image, 0.85)
-    image = fill_background(image)
-    return image
 
 @spaces.GPU
 def render(image, mc_resolution=256, formats=["obj"]):
+    image = Image.fromarray(image)
+    image = image.resize((768, 768))
+    image = remove_background(image, rembg_session)
+    image = resize_foreground(image, 0.85)
+    image = fill_background(image)
+    
     scene_codes = model(image, device=device)
     mesh = model.extract_mesh(scene_codes, resolution=mc_resolution)[0]
     mesh = to_gradio_3d_orientation(mesh)
