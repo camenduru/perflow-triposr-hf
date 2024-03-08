@@ -104,8 +104,8 @@ def render(image, mc_resolution=256, formats=["obj"]):
         rv.append(mesh_path.name)
     return rv[0]
 
-# warm up
-_ = generate("a bird", 42)
+# # warm up
+# _ = generate("a bird", 42)
 
 # layout
 css = """
