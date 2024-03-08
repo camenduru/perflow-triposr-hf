@@ -135,12 +135,12 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
     
     with gr.Column():
         with gr.Row():
-                output_image = gr.Image(label='Generated Image', height=384, width=384)
+                output_image = gr.Image(label='Generated Image', height=384,)
 
                 output_model_obj = gr.Model3D(
                     label="Output 3D Model (OBJ Format)",
                     interactive=False,
-                    height=384, width=384,
+                    height=384,
             )
     
     with gr.Row():
