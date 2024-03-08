@@ -1,0 +1,10 @@
+name: test
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10.12
+  - pip=23.2.1
+  - cudatoolkit=11.7
