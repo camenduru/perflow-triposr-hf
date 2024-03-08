@@ -160,7 +160,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
 
     gr.Markdown(
     """
-    It could a bit slow for the first-time generation due to the warm-up of gradio. After that, it will be fast. Here are some examples provided:
+    Images should be generated within 1 second normally, sometimes, it could a bit slow due to warm-up of the program. Here are some examples provided:
     - a policeman
     - a robot, close-up
     - a red car, side view
@@ -168,7 +168,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
     - a burger
     - a tea pot
     - a wooden chair
-    - an amazing unicorn
+    - a unicorn
     """
     )
     
