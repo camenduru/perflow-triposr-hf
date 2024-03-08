@@ -51,9 +51,11 @@ model.to(device)
 
 ### PeRFlow-T2I
 # pipe_t2i = StableDiffusionPipeline.from_pretrained("Lykon/dreamshaper-8", torch_dtype=torch.float16, safety_checker=None)
-pipe_t2i = StableDiffusionPipeline.from_pretrained("stablediffusionapi/disney-pixar-cartoon", torch_dtype=torch.float16, safety_checker=None)
-delta_weights = UNet2DConditionModel.from_pretrained("hansyan/piecewise-rectified-flow-delta-weights", torch_dtype=torch.float16, variant="v0-1",).state_dict()
-pipe_t2i = merge_delta_weights_into_unet(pipe_t2i, delta_weights)
+# pipe_t2i = StableDiffusionPipeline.from_pretrained("stablediffusionapi/disney-pixar-cartoon", torch_dtype=torch.float16, safety_checker=None)
+# delta_weights = UNet2DConditionModel.from_pretrained("hansyan/piecewise-rectified-flow-delta-weights", torch_dtype=torch.float16, variant="v0-1",).state_dict()
+# pipe_t2i = merge_delta_weights_into_unet(pipe_t2i, delta_weights)
+
+pipe_t2i = StableDiffusionPipeline.from_pretrained("hansyan/perflow-sd15-disney", torch_dtype=torch.float16, safety_checker=None)
 pipe_t2i.scheduler = PeRFlowScheduler.from_config(pipe_t2i.scheduler.config, prediction_type="epsilon", num_time_windows=4)
 pipe_t2i.to('cuda:0', torch.float16)
 
@@ -70,16 +72,18 @@ def generate(text, seed):
         return image
 
     setup_seed(int(seed))
-    # text = text
+    prompt_prefix = "high quality, best quality, masterpiece; "
+    neg_prompt = "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry"
+    text = prompt_prefix + text
     samples = pipe_t2i(
             prompt              = [text],
-            negative_prompt     = ["distorted, blur, low-quality, haze, out of focus"],
+            negative_prompt     = [neg_prompt],
             height              = 512,
             width               = 512,
-            # num_inference_steps = 4,
-            # guidance_scale      = 4.5,
-            num_inference_steps = 6,
-            guidance_scale      = 7,
+            # num_inference_steps = 6,
+            # guidance_scale      = 7.5,
+            num_inference_steps = 8,
+            guidance_scale      = 7.5,
             output_type         = 'pt',
         ).images
     samples = torch.nn.functional.interpolate(samples, size=768, mode='bilinear')
@@ -104,8 +108,6 @@ def render(image, mc_resolution=256, formats=["obj"]):
         rv.append(mesh_path.name)
     return rv[0]
 
-# # warm up
-# _ = generate("a bird", 42)
 
 # layout
 css = """
@@ -129,7 +131,7 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
 
     ### [PeRFlow](https://github.com/magic-research/piecewise-rectified-flow)-T2I  +  [TripoSR](https://github.com/VAST-AI-Research/TripoSR)
     
-    Two-stage synthesis: 1) generating images by PeRFlow-T2I with 6-step inference; 2) rendering 3D assests.
+    Two-stage synthesis: 1) generating images by PeRFlow-T2I; 2) rendering 3D assests.
     """
     )
     
@@ -146,6 +148,21 @@ with gr.Blocks(title="TripoSR", css=css) as interface:
     with gr.Row():
         textbox = gr.Textbox(label="Input Prompt", value="a colorful bird")
         seed = gr.Textbox(label="Random Seed", value=42)
+
+
+    gr.Markdown(
+    """
+    Examples:
+    - a policeman
+    - a robot, close-up
+    - a red car, side view
+    - a blue mug
+    - a burger
+    - a tea pot
+    - a wooden chair
+    - an amazing unicorn
+    """
+    )
     
     # activate
     textbox.submit(
